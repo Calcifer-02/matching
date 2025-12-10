@@ -18,6 +18,8 @@ ENV PYTHONUNBUFFERED=1
 ENV TRANSFORMERS_CACHE=/home/user/.cache/transformers
 ENV SENTENCE_TRANSFORMERS_HOME=/home/user/.cache/sentence_transformers
 ENV HF_HOME=/home/user/.cache/huggingface
+ENV EMBEDDING_MODEL=sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+ENV EMBEDDING_DIMENSIONS=384
 
 # Copy requirements and install dependencies
 COPY --chown=user requirements.txt .
