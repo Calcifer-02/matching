@@ -1,0 +1,17 @@
+# Requirements for HuggingFace Space
+# Оптимизировано для стабильной работы
+
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+numpy>=1.24.0,<2.0.0
+pydantic==2.5.3
+python-dotenv==1.0.0
+
+# PyTorch - используем стандартную версию (HuggingFace имеет достаточно памяти)
+torch>=2.1.0,<2.2.0
+transformers==4.36.2
+
+# Sentence Transformers с совместимой версией huggingface_hub
+sentence-transformers==2.3.1
+huggingface_hub>=0.19.0,<0.20.0
+
