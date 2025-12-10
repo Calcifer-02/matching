@@ -297,6 +297,40 @@ class WeightedMatchResponse(BaseModel):
 
 # --- Endpoints ---
 
+@app.get("/")
+async def root():
+    """
+    Корневая страница API.
+
+    Показывает информацию о сервисе и ссылки на документацию.
+    """
+    return {
+        "service": "Matching Embedding Service",
+        "version": "1.0.0",
+        "status": "running",
+        "model": MODEL_NAME,
+        "docs": "/docs",
+        "redoc": "/redoc",
+        "health": "/health",
+        "endpoints": {
+            "embedding": {
+                "single": "POST /embed",
+                "batch": "POST /embed-batch"
+            },
+            "matching": {
+                "by_text": "POST /match-text",
+                "by_vector": "POST /match",
+                "weighted": "POST /match-weighted"
+            },
+            "management": {
+                "register": "POST /register",
+                "bulk_index": "POST /index/bulk",
+                "stats": "GET /store/stats"
+            }
+        }
+    }
+
+
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Проверка здоровья сервиса."""
