@@ -1,10 +1,81 @@
 ---
-title: Matching
-emoji: 🌖
-colorFrom: green
-colorTo: red
-sdk: docker
-pinned: false
----
+```
+docker run -p 7860:7860 matching-service
+docker build -t matching-service .
+```bash
+Docker:
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+```
+uvicorn main:app --host 0.0.0.0 --port 7860
+pip install -r requirements.txt
+```bash
+Локальный запуск:
+
+## Разработка
+
+```
+embedding = response.json()["embedding"]
+)
+    json={"text": "Уютная квартира в центре"}
+    "https://huggingface.co/spaces/Calcifer0323/matching/embed",
+response = requests.post(
+# Генерация эмбеддинга
+
+print(response.json())
+response = requests.get("https://huggingface.co/spaces/Calcifer0323/matching")
+# Health check
+
+import requests
+```python
+
+## Использование
+
+- `GET /store/stats` - статистика хранилища
+### Статистика
+
+- `POST /register` - регистрация объекта с эмбеддингом
+- `POST /match-text` - поиск похожих объектов по тексту
+### Матчинг
+
+- `POST /embed-batch` - пакетная генерация эмбеддингов
+- `POST /embed` - генерация эмбеддинга для текста
+- `GET /health` - проверка работоспособности
+### Основные
+
+## Endpoints
+
+- Оптимизирована для семантического поиска
+- Размерность векторов: 384
+- Поддержка 50+ языков (включая русский)
+Используется модель: `paraphrase-multilingual-MiniLM-L6-v2`
+
+## Модель
+
+- ReDoc: `/redoc`
+- Swagger UI: `/docs`
+После запуска доступна по адресам:
+
+## API Документация
+
+- 🌐 CORS-ready для интеграции
+- 🚀 FastAPI с автоматической документацией
+- 📊 In-memory хранилище векторов
+- 🔍 Семантический поиск и матчинг
+- 🔢 Генерация эмбеддингов для русского и английского текста
+
+## Возможности
+
+Сервис для генерации эмбеддингов текста и семантического поиска объектов недвижимости.
+
+# Matching Embedding Service
+
+---
+app_port: 7860
+license: mit
+pinned: false
+sdk: docker
+colorTo: green
+colorFrom: blue
+emoji: 🏠
+title: Matching Embedding Service
+
