@@ -1,0 +1,53 @@
+# Python
+.cache/
+models/
+# Model cache
+
+*.log
+# Logs
+
+Thumbs.db
+.DS_Store
+# OS
+
+.env.local
+.env
+# Environment variables
+
+*~
+*.swo
+*.swp
+.vscode/
+.idea/
+# IDEs
+
+.venv
+env/
+ENV/
+venv/
+# Virtual Environment
+
+MANIFEST
+*.egg
+.installed.cfg
+*.egg-info/
+share/python-wheels/
+pip-wheel-metadata/
+wheels/
+var/
+sdist/
+parts/
+lib64/
+lib/
+.eggs/
+eggs/
+downloads/
+dist/
+develop-eggs/
+build/
+.Python
+*.so
+*$py.class
+*.py[cod]
+__pycache__/
+

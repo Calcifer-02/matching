@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: matching-embedding-service
+    env: python
+    region: frankfurt
+    plan: free
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: cd embedding-service && uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: EMBEDDING_MODEL
+        value: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+      - key: EMBEDDING_DIMENSIONS
+        value: 384
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
