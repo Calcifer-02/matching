@@ -19,7 +19,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Конфигурация
-MODEL_NAME = os.getenv("EMBEDDING_MODEL", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+MODEL_NAME = os.getenv("EMBEDDING_MODEL", "sentence-transformers/paraphrase-multilingual-MiniLM-L6-v2")
 EMBEDDING_DIMENSIONS = int(os.getenv("EMBEDDING_DIMENSIONS", "384"))
 
 # Глобальная модель (загружается при старте)
@@ -38,7 +38,14 @@ async def lifespan(app: FastAPI):
     """Загрузка модели при старте приложения."""
     global model
     print(f"Loading embedding model: {MODEL_NAME}")
-    model = SentenceTransformer(MODEL_NAME)
+    # Оптимизация для минимального потребления памяти
+    model = SentenceTransformer(MODEL_NAME, device='cpu')
+    # Используем half precision для экономии памяти (если доступно)
+    try:
+        model.half()
+        print("Model converted to half precision (float16)")
+    except Exception as e:
+        print(f"Could not convert to half precision: {e}")
     print(f"Model loaded successfully. Embedding dimensions: {model.get_sentence_embedding_dimension()}")
     yield
     # Cleanup

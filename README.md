@@ -7,8 +7,8 @@
 ### API Документация (Swagger)
 FastAPI автоматически генерирует интерактивную документацию:
 
-- **Swagger UI**: `http://localhost:8082/docs` (локально) или `https://your-service.onrender.com/docs`
-- **ReDoc**: `http://localhost:8082/redoc`
+- **Swagger UI**: `http://localhost:8082/docs` (локально) или `https://matching-uebb.onrender.com/docs`
+- **ReDoc**: `http://localhost:8082/redoc` (локально) или `https://matching-uebb.onrender.com/redoc`
 - **OpenAPI Schema**: `http://localhost:8082/openapi.json`
 
 В Swagger UI можно:
