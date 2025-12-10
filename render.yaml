@@ -1,11 +1,12 @@
 services:
   - type: web
     name: matching-embedding-service
-    env: python
-    region: frankfurt
-    plan: free
-    buildCommand: chmod +x build.sh && ./build.sh
-    startCommand: cd embedding-service && uvicorn main:app --host 0.0.0.0 --port $PORT
+    runtime: python
+    region: frankfurt  # или oregon для США
+    plan: free  # бесплатный план, можно изменить на starter
+    rootDir: embedding-service
+    buildCommand: pip install --no-cache-dir -r requirements.txt && python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2')"
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /health
     envVars:
       - key: EMBEDDING_MODEL
