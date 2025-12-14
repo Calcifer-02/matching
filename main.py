@@ -41,11 +41,7 @@ async def lifespan(app: FastAPI):
     global model
     print(f"Loading embedding model: {MODEL_NAME}")
     model = SentenceTransformer(MODEL_NAME, device='cpu')
-    try:
-        model.half()
-        print("Model converted to half precision (float16)")
-    except Exception as e:
-        print(f"Could not convert to half precision: {e}")
+    # НЕ используем half() - на CPU LayerNorm не поддерживает float16
     print(f"Model loaded. Dimensions: {model.get_sentence_embedding_dimension()}")
     yield
     model = None
