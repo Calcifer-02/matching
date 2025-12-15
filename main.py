@@ -195,8 +195,10 @@ async def root():
         "description": "Генерирует эмбеддинги. Хранение на стороне Go Backend + pgvector.",
         "endpoints": {
             "POST /embed": "Эмбеддинг из готового текста",
-            "POST /prepare-and-embed": "Подготовка полей + эмбеддинг (ОСНОВНОЙ)",
-            "POST /batch": "Пакетная обработка",
+            "POST /prepare-and-embed": "Подготовка полей + эмбеддинг (создание)",
+            "POST /reindex": "Переиндексация объекта (обновление)",
+            "POST /batch": "Пакетная обработка (создание)",
+            "POST /reindex-batch": "Пакетная переиндексация (обновление)",
             "GET /health": "Проверка здоровья",
             "GET /model-info": "Информация о модели для pgvector"
         },
@@ -380,3 +382,107 @@ LIMIT 10;
             """.strip()
         }
     }
+
+
+# ============== Reindex Endpoint ==============
+
+class ReindexRequest(BaseModel):
+    """
+    Запрос на переиндексацию объекта.
+
+    Используется когда пользователь обновил лида/объект и нужно
+    пересоздать эмбеддинг.
+    """
+    entity_id: str = Field(..., description="ID объекта для переиндексации")
+    entity_type: str = Field(default="lead", description="Тип: 'lead' или 'property'")
+    title: str = Field(default="", description="Название")
+    description: str = Field(default="", description="Описание")
+    requirement: Optional[Dict[str, Any]] = Field(default=None, description="Требования (JSON)")
+    price: Optional[float] = Field(default=None, description="Цена")
+    district: Optional[str] = Field(default=None, description="Район")
+    rooms: Optional[int] = Field(default=None, description="Количество комнат")
+    area: Optional[float] = Field(default=None, description="Площадь")
+    address: Optional[str] = Field(default=None, description="Адрес")
+
+
+class ReindexResponse(BaseModel):
+    """Ответ на переиндексацию."""
+    entity_id: str
+    entity_type: str
+    embedding: List[float]
+    dimensions: int
+    prepared_text: str
+    message: str = Field(default="Reindex successful. Update embedding in your database.")
+
+
+@app.post("/reindex", response_model=ReindexResponse)
+async def reindex_entity(request: ReindexRequest):
+    """
+    Переиндексация объекта (лида или недвижимости).
+
+    ⭐ Используйте когда пользователь ОБНОВИЛ данные объекта.
+
+    Сценарий:
+    1. Пользователь создал лида → POST /prepare-and-embed → сохранили embedding
+    2. Пользователь ИЗМЕНИЛ лида → POST /reindex → получили новый embedding
+    3. Go Backend обновляет embedding в PostgreSQL
+
+    Пример запроса:
+    ```json
+    {
+        "entity_id": "lead-123",
+        "entity_type": "lead",
+        "title": "Обновлённый заголовок",
+        "description": "Новое описание",
+        "price": 12000000,
+        "district": "Арбат",
+        "rooms": 4
+    }
+    ```
+
+    Go Backend должен выполнить:
+    ```sql
+    UPDATE leads SET embedding = $1, updated_at = NOW() WHERE lead_id = $2
+    ```
+    """
+    if model is None:
+        raise HTTPException(status_code=503, detail="Model not loaded")
+
+    prepared = prepare_text(
+        title=request.title,
+        description=request.description,
+        requirement=request.requirement,
+        price=request.price,
+        district=request.district,
+        rooms=request.rooms,
+        area=request.area,
+        address=request.address
+    )
+
+    if not prepared:
+        raise HTTPException(status_code=400, detail="All fields are empty - nothing to reindex")
+
+    embedding = model.encode(prepared, convert_to_numpy=True)
+
+    return ReindexResponse(
+        entity_id=request.entity_id,
+        entity_type=request.entity_type,
+        embedding=embedding.tolist(),
+        dimensions=len(embedding),
+        prepared_text=prepared,
+        message=f"Reindex successful for {request.entity_type} '{request.entity_id}'. Update embedding in your database."
+    )
+
+
+@app.post("/reindex-batch", response_model=BatchResponse)
+async def reindex_batch(request: BatchRequest):
+    """
+    Пакетная переиндексация нескольких объектов.
+
+    Используйте когда нужно переиндексировать много объектов после
+    массового обновления или изменения модели.
+
+    Внутренне вызывает тот же batch_process, но с понятным названием.
+    """
+    return await batch_process(request)
+
