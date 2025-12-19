@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: matching-embedding-service
+    runtime: python
+    region: frankfurt  # или oregon для США
+    plan: free  # бесплатный план, можно изменить на starter
+    rootDir: embedding-service
+    buildCommand: pip install --no-cache-dir -r requirements-prod.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1
+    healthCheckPath: /health
+    envVars:
+      - key: EMBEDDING_MODEL
+        value: sentence-transformers/paraphrase-multilingual-MiniLM-L6-v2
+      - key: EMBEDDING_DIMENSIONS
+        value: 384
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: TRANSFORMERS_CACHE
+        value: /tmp/transformers_cache
+
