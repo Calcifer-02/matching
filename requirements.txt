@@ -7,13 +7,14 @@ numpy>=1.24.0,<2.0.0
 pydantic==2.5.3
 python-dotenv==1.0.0
 
-# PyTorch - используем стандартную версию (HuggingFace имеет достаточно памяти)
-torch>=2.1.0,<2.2.0
-transformers==4.36.2
+# PyTorch - CPU версия для уменьшения размера образа
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.1.0
+transformers>=4.38.0
 
-# Sentence Transformers с совместимой версией huggingface_hub
-sentence-transformers==2.3.1
-huggingface_hub>=0.19.0,<0.20.0
+# Sentence Transformers - обновлённая версия для совместимости с ru-en-RoSBERTa
+sentence-transformers>=2.7.0
+huggingface_hub>=0.20.0
 
 # Production-ready улучшения (v2.1.0)
 prometheus-client>=0.19.0      # Метрики для мониторинга

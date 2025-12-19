@@ -415,6 +415,11 @@ async def metrics_middleware(request: Request, call_next):
 
 # ============== Pydantic Models ==============
 
+class BaseModelConfig(BaseModel):
+    """Базовая модель с отключенным protected namespace для полей model_*"""
+    model_config = {"protected_namespaces": ()}
+
+
 class EmbedRequest(BaseModel):
     """Запрос на генерацию эмбеддинга из готового текста."""
     text: str = Field(..., min_length=1, max_length=MAX_TEXT_LENGTH, description="Текст для эмбеддинга")
@@ -427,7 +432,7 @@ class EmbedRequest(BaseModel):
         return v
 
 
-class EmbedResponse(BaseModel):
+class EmbedResponse(BaseModelConfig):
     """Ответ с эмбеддингом."""
     embedding: List[float]
     dimensions: int
@@ -452,7 +457,7 @@ class PrepareAndEmbedRequest(BaseModel):
     address: Optional[str] = Field(default=None, max_length=500, description="Адрес")
 
 
-class PrepareAndEmbedResponse(BaseModel):
+class PrepareAndEmbedResponse(BaseModelConfig):
     """Ответ с эмбеддингом."""
     embedding: List[float]
     dimensions: int
@@ -498,7 +503,7 @@ class BatchResultItem(BaseModel):
     cached: bool = Field(default=False, description="Результат из кэша")
 
 
-class BatchResponse(BaseModel):
+class BatchResponse(BaseModelConfig):
     """Ответ на пакетную обработку."""
     results: List[BatchResultItem]
     dimensions: int
@@ -509,7 +514,7 @@ class BatchResponse(BaseModel):
     model_checksum: str
 
 
-class HealthResponse(BaseModel):
+class HealthResponse(BaseModelConfig):
     """Ответ health check."""
     status: str
     model: str
@@ -536,7 +541,7 @@ class ReindexRequest(BaseModel):
     address: Optional[str] = Field(default=None, max_length=500, description="Адрес")
 
 
-class ReindexResponse(BaseModel):
+class ReindexResponse(BaseModelConfig):
     """Ответ на переиндексацию."""
     entity_id: str
     entity_type: str

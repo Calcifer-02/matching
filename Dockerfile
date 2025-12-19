@@ -18,9 +18,8 @@ WORKDIR /app
 
 # Base settings
 ENV PYTHONUNBUFFERED=1
-ENV TRANSFORMERS_CACHE=/home/user/.cache/transformers
-ENV SENTENCE_TRANSFORMERS_HOME=/home/user/.cache/sentence_transformers
 ENV HF_HOME=/home/user/.cache/huggingface
+ENV SENTENCE_TRANSFORMERS_HOME=/home/user/.cache/sentence_transformers
 
 # Model settings
 ENV EMBEDDING_MODEL=ai-forever/ru-en-RoSBERTa
