@@ -1,5 +1,5 @@
 # Requirements for HuggingFace Space
-# Оптимизировано для стабильной работы
+# Оптимизировано для стабильной работы и production-ready
 
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
@@ -14,4 +14,14 @@ transformers==4.36.2
 # Sentence Transformers с совместимой версией huggingface_hub
 sentence-transformers==2.3.1
 huggingface_hub>=0.19.0,<0.20.0
+
+# Production-ready улучшения (v2.1.0)
+prometheus-client>=0.19.0      # Метрики для мониторинга
+slowapi>=0.1.9                 # Rate limiting
+structlog>=23.2.0              # Structured logging (JSON)
+cachetools>=5.3.0              # In-memory кэширование
+redis>=5.0.0                   # Redis кэширование (опционально)
+opentelemetry-api>=1.21.0      # Tracing (опционально)
+opentelemetry-sdk>=1.21.0
+opentelemetry-instrumentation-fastapi>=0.42b0
 
